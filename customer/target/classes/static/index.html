@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error handeling</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <form id="groupForm">
+        <div class="form-group">
+            <label for="exampleInputFName">First Name </label>
+            <input type="text" class="form-control" id="exampleInputFName" placeholder="enter first name">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputLName">Last Name </label>
+            <input type="txt" class="form-control" id="exampleInputLName" placeholder="enter last name ">
+        </div>
+        <input type="submit" class="btn btn-primary" value="Submit">
+    </form>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        $("#groupForm").submit(function(e) {
+            e.preventDefault();
+            console.log("helloo")
+            var firstName = $("#exampleInputFName").val();
+            var lastName = $("#exampleInputLName").val();
+
+            var userJsobj = {
+                firstName: firstName,
+                lastName: lastName
+            }
+
+            var userJason = JSON.stringify(userJsobj);
+
+            console.log(userJason);
+
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/api/customer/",
+                data: userJason,
+                contentType: "application/json",
+                success: function(response) {
+
+                    console.log(response);
+
+                },
+                error: function(responseData) {
+                    console.log(responseData);
+                    var stutasCode = responseData.status;
+                    console.log(stutasCode);
+                    if (stutasCode.toString()[0] == 4) {
+                        alert(stutasCode + " (you can't leave the field empty)");
+                    } else if (stutasCode.toString()[0] == 5) {
+                        alert(stutasCode + "( it's not you'r fault don't panic)")
+                    }
+
+                }
+
+
+            });
+
+
+        });
+    </script>
+</body>
+
+</html>
